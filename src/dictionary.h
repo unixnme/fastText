@@ -15,6 +15,7 @@
 #include <string>
 #include <unordered_map>
 #include <vector>
+#include <boost/serialization/strong_typedef.hpp>
 
 #include "args.h"
 #include "real.h"
@@ -22,6 +23,8 @@
 namespace fasttext {
 
 typedef int32_t id_type;
+BOOST_STRONG_TYPEDEF(uint32_t, hash_t)
+
 enum class entry_type : int8_t { word = 0, label = 1 };
 
 struct entry {
@@ -37,7 +40,7 @@ class Dictionary {
   static const int32_t MAX_LINE_SIZE = 1024;
 
   int32_t find(const std::string&) const;
-  int32_t find(const std::string&, uint32_t h) const;
+  int32_t find(const std::string&, hash_t h) const;
   void initTableDiscard();
   void initNgrams();
   void reset(std::istream&) const;
@@ -72,7 +75,7 @@ class Dictionary {
   int32_t nlabels() const;
   int64_t ntokens() const;
   int32_t getId(const std::string&) const;
-  int32_t getId(const std::string&, uint32_t h) const;
+  int32_t getId(const std::string&, hash_t h) const;
   entry_type getType(int32_t) const;
   entry_type getType(const std::string&) const;
   bool discard(int32_t, real) const;
@@ -87,7 +90,7 @@ class Dictionary {
       const std::string&,
       std::vector<int32_t>&,
       std::vector<std::string>* substrings = nullptr) const;
-  uint32_t hash(const std::string& str) const;
+  hash_t hash(const std::string& str) const;
   void add(const std::string&);
   bool readWord(std::istream&, std::string&) const;
   void readFromFile(std::istream&);

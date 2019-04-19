@@ -46,7 +46,7 @@ int32_t Dictionary::find(const std::string& w) const {
   return find(w, hash(w));
 }
 
-int32_t Dictionary::find(const std::string& w, uint32_t h) const {
+int32_t Dictionary::find(const std::string& w, hash_t h) const {
   int32_t word2intsize = word2int_.size();
   int32_t id = h % word2intsize;
   while (word2int_[id] != -1 && words_[word2int_[id]].word != w) {
@@ -126,7 +126,7 @@ bool Dictionary::discard(int32_t id, real rand) const {
   return rand > pdiscard_[id];
 }
 
-int32_t Dictionary::getId(const std::string& w, uint32_t h) const {
+int32_t Dictionary::getId(const std::string& w, hash_t h) const {
   int32_t id = find(w, h);
   return word2int_[id];
 }
@@ -160,8 +160,8 @@ std::string Dictionary::getWord(int32_t id) const {
 // Since all fasttext models that were already released were trained
 // using signed char, we fixed the hash function to make models
 // compatible whatever compiler is used.
-uint32_t Dictionary::hash(const std::string& str) const {
-  uint32_t h = 2166136261;
+hash_t Dictionary::hash(const std::string& str) const {
+  hash_t h = (hash_t)2166136261;
   for (size_t i = 0; i < str.size(); i++) {
     h = h ^ uint32_t(int8_t(str[i]));
     h = h * 16777619;
@@ -387,7 +387,7 @@ int32_t Dictionary::getLine(
   words.clear();
   labels.clear();
   while (readWord(in, token)) {
-    uint32_t h = hash(token);
+    hash_t h = hash(token);
     int32_t wid = getId(token, h);
     entry_type type = wid < 0 ? getType(token) : getType(wid);
 

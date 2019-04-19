@@ -13,9 +13,11 @@ project(fasttext)
 set (fasttext_VERSION_MAJOR 0)
 set (fasttext_VERSION_MINOR 1)
 
-include_directories(fasttext)
+find_package( Boost 1.69 COMPONENTS program_options REQUIRED )
 
-set(CMAKE_CXX_FLAGS " -pthread -std=c++11 -funroll-loops -O3 -march=native")
+include_directories(fasttext ${Boost_INCLUDE_DIR})
+
+set(CMAKE_CXX_FLAGS " -pthread -std=c++11 -funroll-loops -O0 -march=native")
 
 set(HEADER_FILES
     src/args.h
@@ -55,7 +57,7 @@ set_target_properties(fasttext-static PROPERTIES OUTPUT_NAME fasttext)
 set_target_properties(fasttext-static_pic PROPERTIES OUTPUT_NAME fasttext_pic
   POSITION_INDEPENDENT_CODE True)
 add_executable(fasttext-bin src/main.cc)
-target_link_libraries(fasttext-bin pthread fasttext-static)
+target_link_libraries(fasttext-bin pthread fasttext-static ${Boost_LIBRARIES})
 set_target_properties(fasttext-bin PROPERTIES PUBLIC_HEADER "${HEADER_FILES}" OUTPUT_NAME fasttext)
 install (TARGETS fasttext-shared
     LIBRARY DESTINATION lib)
