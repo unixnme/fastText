@@ -46,6 +46,13 @@ int32_t Dictionary::find(const std::string& w) const {
   return find(w, hash(w));
 }
 
+/** find the index to word2int where the word entry lies
+ *  if no such entry, return the empty one
+ *
+ * @param w
+ * @param h
+ * @return
+ */
 int32_t Dictionary::find(const std::string& w, hash_t h) const {
   int32_t word2intsize = word2int_.size();
   int32_t id = h % word2intsize;
@@ -55,6 +62,12 @@ int32_t Dictionary::find(const std::string& w, hash_t h) const {
   return id;
 }
 
+/** add word to the dictionary
+ * if there is already one, increment its counter
+ * else add it with count = 1
+ *
+ * @param w
+ */
 void Dictionary::add(const std::string& w) {
   int32_t h = find(w);
   ntokens_++;
@@ -258,6 +271,11 @@ void Dictionary::readFromFile(std::istream& in) {
   }
 }
 
+/** remove words below threshold
+ *
+ * @param t: word count threshold
+ * @param tl: label count threshold
+ */
 void Dictionary::threshold(int64_t t, int64_t tl) {
   sort(words_.begin(), words_.end(), [](const entry& e1, const entry& e2) {
     if (e1.type != e2.type) {
@@ -406,6 +424,11 @@ int32_t Dictionary::getLine(
   return ntokens;
 }
 
+/**
+ * push the hash + nwords into the subword
+ * @param hashes
+ * @param id
+ */
 void Dictionary::pushHash(std::vector<int32_t>& hashes, int32_t id) const {
   if (pruneidx_size_ == 0 || id < 0) {
     return;

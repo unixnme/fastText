@@ -31,7 +31,7 @@ struct entry {
   std::string word;
   int64_t count;
   entry_type type;
-  std::vector<int32_t> subwords;
+  std::vector<int32_t> subwords; // hashes of subwords
 };
 
 class Dictionary {
@@ -52,7 +52,7 @@ class Dictionary {
   std::vector<entry> words_;
 
   std::vector<real> pdiscard_;
-  int32_t size_;
+  int32_t size_; // word_.size() = nwords + nlabels
   int32_t nwords_;
   int32_t nlabels_;
   int64_t ntokens_;
